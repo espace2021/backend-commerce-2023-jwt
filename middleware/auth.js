@@ -1,18 +1,34 @@
-const  jwt  = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
-const auth=async(req,res,next)=>{
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (!token) {
-            return res.sendStatus(401);
-        }
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            if (err) {
-            return res.sendStatus(401);
-            }
-            req.user = user;
-            next();
-        });
- }
+/**
+ * 
+ * Middleware function that check if user has token and can access or not
+ *  
+ * @param {string} token - Authorization token provided by request sender 
+ *  
+ * @return 
+ * @status 403 No token provided
+ * @Status 403 Invalid token
+ * 
+ */
 
- module.exports = auth;
+const verifyToken = (req, res, next) => {
+
+    const header = req.headers['authorization'];
+    const token = header && header.split('Bearer ')[1];
+    console.log("TOKEN :",token)
+    if (!token) return res.status(403).send({ success: false, message: 'No token provided' });
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+
+        if (err) return res.status(403).send({ success: false, message: 'Invalid token' });
+        req.user = {}
+        req.user.id = decoded.iduser
+        req.user.role = decoded.role
+        next()
+    })
+}
+
+
+module.exports = { verifyToken }
