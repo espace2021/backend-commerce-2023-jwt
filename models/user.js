@@ -1,11 +1,6 @@
 const  mongoose =require("mongoose")
 var userSchema = mongoose.Schema({
-    nom:{
-        type:String,
-        required:"nom is required"
-    } ,
-    
-    email:{
+     email:{
         type:String,
         required:"Email is required",
         unique:true
