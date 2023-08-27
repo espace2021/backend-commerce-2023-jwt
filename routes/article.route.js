@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Article=require("../models/article")
 
+//const {verifyToken} =require("../middleware/auth")
 
 // chercher un article par s/cat
 router.get('/scat/:scategorieID',async(req, res)=>{
