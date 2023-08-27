@@ -40,7 +40,7 @@ router.post('/login', async (req, res, )=> {
         const isMatch=await bcrypt.compare(password,user.password);
        if(!isMatch) {res.status(400).json({msg:'mot de passe incorrect'}); return;}
 
-      // if(user.role!=1) throw Error('Accès authorisé sauf pour admin');
+      // if(user.role!="admin") throw Error('Accès authorisé sauf pour admin');
 
         const accessToken = generateAccessToken(user);
 
