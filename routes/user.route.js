@@ -7,15 +7,17 @@ const bcrypt = require('bcrypt');
 //Register
 
 router.post('/', async (req, res, )=> {
-    const{email,password,role,firstname,lastname}=req.body;
+    const{email,password,role,firstname,lastname,isActive,avatar}=req.body;
     const salt=await bcrypt.genSalt(10);
     const hash=await bcrypt.hash(password,salt);
     const newUser=new User({
       email:email,
       password:hash,
-      role:role||0,
+      role:role||"user",
       firstname:firstname ||"myfirstname",
-      lastname:lastname||"mylastname"
+      lastname:lastname||"mylastname",
+      isActive:isActive ||true,
+      avatar:avatar||"avatar.jpg"
         });
     try {
            await newUser.save();
