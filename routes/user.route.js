@@ -11,10 +11,12 @@ const b = "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..Blxk1m6xQppUzI0A.9yxF5xZnEPm
 
 //Register
 
-router.post('/', async (req, res, )=> {
+router.post('/register', async (req, res, )=> {
     const{email,password,role,firstname,lastname,isActive,avatar}=req.body;
-    const salt=await bcrypt.genSalt(10);
-    const hash=await bcrypt.hash(password,salt);
+    
+    const user = await User.findOne({ email })
+    if (user) return res.status(404).send({ success: false, message: "User already exists" })
+    
     const newUser=new User({
       email:email,
       password:hash,
@@ -24,6 +26,7 @@ router.post('/', async (req, res, )=> {
       isActive:isActive ||true,
       avatar:avatar||"avatar.jpg"
         });
+    
     try {
            await newUser.save();
            return res.status(201).send({ success: true, message: "Account created successfully", user: newUser })
