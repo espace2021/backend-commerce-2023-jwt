@@ -21,8 +21,7 @@ router.post('/', async (req, res, )=> {
         });
     try {
            await newUser.save();
-   
-          return res.status(201).send({ success: true, message: "Account created successfully", user: newUser })
+           return res.status(201).send({ success: true, message: "Account created successfully", user: newUser })
  
        } catch (error) {
            res.status(409).json({ message: error.message });
