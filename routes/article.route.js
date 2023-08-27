@@ -2,10 +2,23 @@ const express = require('express');
 const router = express.Router();
 const Article=require("../models/article")
 
-// afficher la liste des articles.
-router.get('/', async (req, res, )=> {
+//const {verifyToken} =require("../middleware/auth")
+
+// chercher un article par s/cat
+router.get('/scat/:scategorieID',async(req, res)=>{
     try {
-        const articles = await Article.find().populate("scategorieID").exec();
+        const art = await Article.find({ scategorieID: req.params.scategorieID}).exec();
+        
+        res.status(200).json(art);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+// afficher la liste des articles.
+router.get('/',async (req, res, )=> {
+    try {
+        const articles = await Article.find({}, null, {sort: {'_id': -1}}).populate("scategorieID").exec();
 
                 
         res.status(200).json(articles);
@@ -14,6 +27,7 @@ router.get('/', async (req, res, )=> {
     }
 
 });
+
 // créer un nouvel article
 router.post('/', async (req, res) =>  {
     
@@ -64,3 +78,4 @@ router.delete('/:articleId', async (req, res)=> {
 
 });
 module.exports = router;
+
