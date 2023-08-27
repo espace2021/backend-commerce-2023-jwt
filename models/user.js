@@ -18,6 +18,15 @@ var userSchema = mongoose.Schema({
         type:Number,
         default:0
     } ,
+    firstname: {
+        type: String,
+        required: false,
+    },
+
+    lastname: {
+        type: String,
+        required: false,
+    },
 });
 
 module.exports=mongoose.model('User',userSchema)
