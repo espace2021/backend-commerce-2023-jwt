@@ -16,6 +16,9 @@ router.post('/register', async (req, res, )=> {
     
     const user = await User.findOne({ email })
     if (user) return res.status(404).send({ success: false, message: "User already exists" })
+
+    const salt=await bcrypt.genSalt(10);
+    const hash=await bcrypt.hash(password,salt);
     
     const newUser=new User({
       email:email,
@@ -47,9 +50,12 @@ router.post('/login', async (req, res) =>  {
           return res.status(404).send({ success: false, message: "All fields are required" })
       }
 
-      let user = await User.findOne({ email }).select('+password').select('+isActive')
-      
+       const user = await User.findOne({email});
 
+         const isMatch=await bcrypt.compare(password,user.password);
+           if(!isMatch) {res.status(400).json({msg:'mot de passe incorrect'});
+           return} ;
+  
       if (!user) {
 
           return res.status(404).send({ success: false, message: "Account doesn't exists" })
@@ -86,7 +92,7 @@ router.post('/login', async (req, res) =>  {
 
 //Access Token 
 const generateAccessToken=(user) =>{
-    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' });
+    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '60s' });
   }
 
   // Refresh
