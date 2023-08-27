@@ -7,20 +7,23 @@ const bcrypt = require('bcrypt');
 //Register
 
 router.post('/', async (req, res, )=> {
-    const{nom,adress,email,password,role}=req.body;
+    const{nom,adress,email,password,role,firstname,lastname}=req.body;
     const salt=await bcrypt.genSalt(10);
     const hash=await bcrypt.hash(password,salt);
     const newUser=new User({
       nom:nom,
-      adress:adress,
+      adress:adress||"sfax",
       email:email,
       password:hash,
-      role:role
+      role:role||0,
+      firstname:firstname ||"myfirstname",
+      lastname:lastname||"mylastname"
         });
     try {
            await newUser.save();
    
-           res.status(201).json(newUser );
+          return res.status(201).send({ success: true, message: "Account created successfully", user: newUser })
+ 
        } catch (error) {
            res.status(409).json({ message: error.message });
        }
